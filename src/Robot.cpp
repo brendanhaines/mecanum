@@ -1,4 +1,7 @@
 #include "WPILib.h"
+#include "InterLinkElite.h"
+
+#define PI 3.141592653589793238462643383279
 
 ///// USER PARAMETERS /////
 
@@ -11,22 +14,20 @@
 #define frontRightChannel	1
 #define backRightChannel	2
 
-#define InterLink_Elite_ID			0
+// adjust sign so that (+)*speed results in bot turning clockwise
+#define frontLeftSpeed	1.0
+#define backLeftSpeed	1.0
+#define frontRightSpeed	1.0
+#define backRightSpeed	1.0
+
+const double frontLeftAngle = PI/4;
+const double backLeftAngle = 3*PI/4;
+const double frontRightAngle = -PI/4;
+const double backRightAngle = -3*PI/4;
+
+#define InterLink_ID			0
 
 ///// END USER PARAMETERS /////
-
-// InterLink Elite Channel Mapping
-#define InterLink_Elite_AILE		0
-#define InterLink_Elite_ELEV		1
-#define InterLink_Elite_THRO		2
-#define	InterLink_Elite_CH6			3
-#define InterLink_Elite_RUDD		4
-
-#define InterLink_Elite_CH5			1
-#define InterLink_Elite_CH7			2
-#define InterLink_Elite_RESET		3
-#define InterLink_Elite_CH8_BACK	4
-#define InterLink_Elite_CH8_FRONT	5
 
 class Robot: public IterativeRobot
 {
@@ -40,21 +41,23 @@ class Robot: public IterativeRobot
 	Talon *backRight;
 
 	// Input Devices
-	Joystick *InterLink;
+	InterLinkElite *InterLink;
+
 public:
-	Robot()
+
+	////////////////////////////////
+	///// ROBOT INITIALIZATION /////
+	////////////////////////////////
+
+	void RobotInit()
 	{
 		frontLeft = new Talon( frontLeftChannel );
 		backLeft = new Talon( backLeftChannel );
 		frontRight = new Talon( frontRightChannel );
 		backRight = new Talon( backRightChannel );
 
+		InterLink = new InterLinkElite( InterLink_ID );
 		ds = DriverStation::GetInstance();
-		InterLink = new Joystick( InterLink_Elite_ID );
-	}
-
-	void RobotInit()
-	{
 		lw = LiveWindow::GetInstance();
 	}
 
@@ -77,26 +80,19 @@ public:
 
 	void TeleopPeriodic()
 	{
-		// Write Buttons to SmartDashboard
-		SmartDashboard::PutBoolean( "CH5", InterLink->GetRawButton( InterLink_Elite_CH5 ) );
-		SmartDashboard::PutBoolean( "CH7", InterLink->GetRawButton( InterLink_Elite_CH7 ) );
-		SmartDashboard::PutBoolean( "RESET", InterLink->GetRawButton( InterLink_Elite_RESET ) );
-		if( InterLink->GetRawButton( InterLink_Elite_CH8_BACK ) )
-			SmartDashboard::PutNumber( "CH8", -1 );
-		else if( InterLink->GetRawButton( InterLink_Elite_CH8_FRONT ) )
-			SmartDashboard::PutNumber( "CH8", 1 );
-		else
-			SmartDashboard::PutNumber( "CH8", 0 );
+		double aile = InterLink->getAile();
+		double elev = InterLink->getElev();
 
-		// Write axes to SmartDashboard
-		SmartDashboard::PutNumber( "AILE", InterLink->GetRawAxis( InterLink_Elite_AILE ) );
-		SmartDashboard::PutNumber( "ELEV", InterLink->GetRawAxis( InterLink_Elite_ELEV ) );
-		SmartDashboard::PutNumber( "THRO", InterLink->GetRawAxis( InterLink_Elite_THRO ) );
-		SmartDashboard::PutNumber( "RUDD", InterLink->GetRawAxis( InterLink_Elite_RUDD ) );
-		SmartDashboard::PutNumber( "CH6", InterLink->GetRawAxis( InterLink_Elite_CH6 ) );
+		double driveAngle = atan2( -aile, -elev );
+		SmartDashboard::PutNumber( "Drive Angle", driveAngle );
 
-		// Write system into to SmartDashboard
-		SmartDashboard::PutNumber( "BATT", DriverStation::GetInstance()->GetBatteryVoltage() );
+		double driveSpeed = sqrt( aile*aile + elev*elev );
+		SmartDashboard::PutNumber( "Drive Speed", driveSpeed );
+
+		frontLeft->Set( (float)( frontLeftSpeed * driveSpeed * sin( frontLeftAngle-driveAngle ) ) );
+		backLeft->Set( (float)( backLeftSpeed * driveSpeed * sin( backLeftAngle-driveAngle ) ) );
+		frontRight->Set( (float)( frontRightSpeed * driveSpeed * sin( frontRightAngle-driveAngle ) ) );
+		backRight->Set( (float)( backRightSpeed * driveSpeed * sin( backRightAngle-driveAngle ) ) );
 	}
 
 	////////////////
