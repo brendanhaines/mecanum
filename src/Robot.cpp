@@ -20,7 +20,7 @@
 #define InterLink_Elite_ELEV		1
 #define InterLink_Elite_THRO		2
 #define	InterLink_Elite_CH6			3
-#define InterLink_Elite_YAW			4
+#define InterLink_Elite_RUDD		4
 
 #define InterLink_Elite_CH5			1
 #define InterLink_Elite_CH7			2
@@ -90,6 +90,13 @@ public:
 
 		// Write axes to SmartDashboard
 		SmartDashboard::PutNumber( "AILE", InterLink->GetRawAxis( InterLink_Elite_AILE ) );
+		SmartDashboard::PutNumber( "ELEV", InterLink->GetRawAxis( InterLink_Elite_ELEV ) );
+		SmartDashboard::PutNumber( "THRO", InterLink->GetRawAxis( InterLink_Elite_THRO ) );
+		SmartDashboard::PutNumber( "RUDD", InterLink->GetRawAxis( InterLink_Elite_RUDD ) );
+		SmartDashboard::PutNumber( "CH6", InterLink->GetRawAxis( InterLink_Elite_CH6 ) );
+
+		// Write system into to SmartDashboard
+		SmartDashboard::PutNumber( "BATT", DriverStation::GetInstance()->GetBatteryVoltage() );
 	}
 
 	////////////////
