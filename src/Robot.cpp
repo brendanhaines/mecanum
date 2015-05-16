@@ -16,6 +16,12 @@
 ///// END USER PARAMETERS /////
 
 // InterLink Elite Channel Mapping
+#define InterLink_Elite_AILE		0
+#define InterLink_Elite_ELEV		1
+#define InterLink_Elite_THRO		2
+#define	InterLink_Elite_CH6			3
+#define InterLink_Elite_YAW			4
+
 #define InterLink_Elite_CH5			1
 #define InterLink_Elite_CH7			2
 #define InterLink_Elite_RESET		3
@@ -71,7 +77,19 @@ public:
 
 	void TeleopPeriodic()
 	{
-		SmartDashboard::PutBoolean( "resetButton", InterLink->GetRawButton( InterLink_Elite_RESET ) );
+		// Write Buttons to SmartDashboard
+		SmartDashboard::PutBoolean( "CH5", InterLink->GetRawButton( InterLink_Elite_CH5 ) );
+		SmartDashboard::PutBoolean( "CH7", InterLink->GetRawButton( InterLink_Elite_CH7 ) );
+		SmartDashboard::PutBoolean( "RESET", InterLink->GetRawButton( InterLink_Elite_RESET ) );
+		if( InterLink->GetRawButton( InterLink_Elite_CH8_BACK ) )
+			SmartDashboard::PutNumber( "CH8", -1 );
+		else if( InterLink->GetRawButton( InterLink_Elite_CH8_FRONT ) )
+			SmartDashboard::PutNumber( "CH8", 1 );
+		else
+			SmartDashboard::PutNumber( "CH8", 0 );
+
+		// Write axes to SmartDashboard
+		SmartDashboard::PutNumber( "AILE", InterLink->GetRawAxis( InterLink_Elite_AILE ) );
 	}
 
 	////////////////
