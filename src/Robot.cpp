@@ -11,9 +11,16 @@
 #define frontRightChannel	1
 #define backRightChannel	2
 
-#define InterLink_Elite_ID	0
+#define InterLink_Elite_ID			0
 
 ///// END USER PARAMETERS /////
+
+// InterLink Elite Channel Mapping
+#define InterLink_Elite_CH5			1
+#define InterLink_Elite_CH7			2
+#define InterLink_Elite_RESET		3
+#define InterLink_Elite_CH8_BACK	4
+#define InterLink_Elite_CH8_FRONT	5
 
 class Robot: public IterativeRobot
 {
@@ -63,7 +70,9 @@ public:
 	{}
 
 	void TeleopPeriodic()
-	{}
+	{
+		SmartDashboard::PutBoolean( "resetButton", InterLink->GetRawButton( InterLink_Elite_RESET ) );
+	}
 
 	////////////////
 	///// TEST /////
@@ -72,7 +81,6 @@ public:
 	void TestPeriodic()
 	{
 		lw->Run();
-		SmartDashboard::PutBoolean( "resetButton", InterLink->GetRawButton(2) );
 	}
 };
 
