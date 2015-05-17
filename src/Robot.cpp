@@ -7,6 +7,7 @@
 
 // Tuning Parameters
 #define throScale	1
+#define ruddScale   1
 
 // Wiring Parameters
 #define frontLeftChannel	4
@@ -83,6 +84,7 @@ public:
 		double aile = InterLink->getAile();
 		double elev = InterLink->getElev();
 		double rudd = InterLink->getRudd();
+		SmartDashboard::PutNumber( "Rudder", rudd );
 
 		double driveAngle = atan2( -aile, elev );
 		SmartDashboard::PutNumber( "Drive Angle", driveAngle );
@@ -91,16 +93,16 @@ public:
 		SmartDashboard::PutNumber( "Drive Speed", driveSpeed );
 
 		frontLeft->Set( (float)(
-				throScale * frontLeftSpeed * driveSpeed * sin( frontLeftAngle-driveAngle )
+				throScale * frontLeftSpeed * ( driveSpeed * sin( frontLeftAngle-driveAngle ) + ruddScale * rudd )
 				) );
 		backLeft->Set( (float)(
-				throScale * backLeftSpeed * driveSpeed * sin( backLeftAngle-driveAngle )
+				throScale * backLeftSpeed * ( driveSpeed * sin( backLeftAngle-driveAngle ) + ruddScale * rudd )
 				) );
 		frontRight->Set( (float)(
-				throScale * frontRightSpeed * driveSpeed * sin( frontRightAngle-driveAngle )
+				throScale * frontRightSpeed * ( driveSpeed * sin( frontRightAngle-driveAngle ) + ruddScale * rudd )
 				) );
 		backRight->Set( (float)(
-				throScale * backRightSpeed * driveSpeed * sin( backRightAngle-driveAngle )
+				throScale * backRightSpeed * ( driveSpeed * sin( backRightAngle-driveAngle ) + ruddScale * rudd )
 				) );
 	}
 
