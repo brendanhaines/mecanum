@@ -14,22 +14,22 @@ InterLinkElite::InterLinkElite( int port )
 
 double InterLinkElite::getAile()
 {
-	return stick->GetRawAxis( aile ) / (aileTrim[2]-aileTrim[0]);
+	return stick->GetRawAxis( aile ) * 2 / (aileTrim[2]-aileTrim[0]) - aileTrim[1];
 }
 
 double InterLinkElite::getElev()
 {
-	return stick->GetRawAxis( elev ) / (elevTrim[2]-elevTrim[0]);
+	return stick->GetRawAxis( elev ) * 2 / (elevTrim[2]-elevTrim[0]) - elevTrim[1];
 }
 
 double InterLinkElite::getThro()
 {
-	return stick->GetRawAxis( thro ) / (throTrim[2]-throTrim[0]);
+	return stick->GetRawAxis( thro ) * 2 / (throTrim[2]-throTrim[0]) - throTrim[1];
 }
 
 double InterLinkElite::getRudd()
 {
-	return stick->GetRawAxis( rudd ) / (ruddTrim[2]-ruddTrim[0]);
+	return stick->GetRawAxis( rudd ) * 2 / (ruddTrim[2]-ruddTrim[0]) - ruddTrim[1];
 }
 
 double InterLinkElite::getCh5()
@@ -41,7 +41,7 @@ double InterLinkElite::getCh5()
 
 double InterLinkElite::getCh6()
 {
-	return stick->GetRawAxis( ch6 ) / (ch6Trim[2]-ch6Trim[0]);
+	return stick->GetRawAxis( ch6 ) * 2 / (ch6Trim[2]-ch6Trim[0]) - ch6Trim[1];
 }
 
 double InterLinkElite::getCh7()
