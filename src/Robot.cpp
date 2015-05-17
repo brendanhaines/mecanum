@@ -84,7 +84,7 @@ public:
 		double elev = InterLink->getElev();
 		double rudd = InterLink->getRudd();
 
-		double driveAngle = atan2( -aile, -elev );
+		double driveAngle = atan2( -aile, elev );
 		SmartDashboard::PutNumber( "Drive Angle", driveAngle );
 
 		double driveSpeed = sqrt( aile*aile + elev*elev );
