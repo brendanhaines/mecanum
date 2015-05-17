@@ -6,9 +6,9 @@
 ///// USER PARAMETERS /////
 
 // Tuning Parameters
-#define throScale	1
+double throScale =	1;
 #define ruddScale   1
-#define aileScale	2
+#define aileScale	1
 #define elevScale	1
 
 // Wiring Parameters
@@ -83,10 +83,14 @@ public:
 
 	void TeleopPeriodic()
 	{
+		double ch6 = InterLink->getCh6();
 		double aile = InterLink->getAile();
 		double elev = InterLink->getElev();
 		double rudd = InterLink->getRudd();
 		SmartDashboard::PutNumber( "Rudder", rudd );
+		SmartDashboard::PutNumber( "Throttle", ch6 );
+
+		throScale = ch6 + 1;
 
 		double driveAngle = atan2( -aile*aileScale, elev*elevScale );
 		SmartDashboard::PutNumber( "Drive Angle", driveAngle );
