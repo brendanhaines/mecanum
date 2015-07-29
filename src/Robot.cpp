@@ -12,10 +12,10 @@ double throScale =	1;
 #define elevScale	1
 
 // Wiring Parameters
-#define frontLeftChannel	4
-#define backLeftChannel		3
+#define frontLeftChannel	3
+#define backLeftChannel		2
 #define frontRightChannel	1
-#define backRightChannel	2
+#define backRightChannel	0
 
 // adjust sign so that (+)*speed results in bot turning clockwise
 #define frontLeftSpeed	1.0
