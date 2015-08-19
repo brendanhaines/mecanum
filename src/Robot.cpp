@@ -66,6 +66,9 @@ public:
 		SlaveInterLink = new InterLinkElite( Slave_InterLink_ID );
 		ds = DriverStation::GetInstance();
 		lw = LiveWindow::GetInstance();
+
+		SmartDashboard::PutBoolean( "Buddy Box Enabled", false );
+		SmartDashboard::PutBoolean( "Slave Controls Speed", false );
 	}
 
 	//////////////////////
@@ -89,10 +92,10 @@ public:
 	{
 		double throttle;
 
-		bool BuddyBoxEnabled = SmartDashboard::GetBoolean( "Buddy Box Enabled" , false);
+		bool BuddyBoxEnabled = SmartDashboard::GetBoolean( "Buddy Box Enabled" );
 		bool SlaveInControl = MasterInterLink->GetCh5();
 		SmartDashboard::PutBoolean( "Slave In Control", SlaveInControl );
-		bool SlaveControlsSpeed = SmartDashboard::GetBoolean( "Slave Controls Speed", false );
+		bool SlaveControlsSpeed = SmartDashboard::GetBoolean( "Slave Controls Speed" );
 
 		if( BuddyBoxEnabled && SlaveInControl ) ActiveInterLink = SlaveInterLink;
 		else ActiveInterLink = MasterInterLink;
@@ -105,9 +108,9 @@ public:
 		double elev = ActiveInterLink->getElev();
 		double rudd = ActiveInterLink->getRudd();
 		SmartDashboard::PutNumber( "Rudder", rudd );
-		SmartDashboard::PutNumber( "Throttle", ch6 );
+		SmartDashboard::PutNumber( "Throttle", throttle );
 
-		throScale = ch6 + 1;
+		throScale = throttle + 1;
 
 		double driveAngle = atan2( -aile*aileScale, elev*elevScale );
 		SmartDashboard::PutNumber( "Drive Angle", driveAngle );
