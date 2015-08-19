@@ -146,10 +146,23 @@ public:
 	///// TEST /////
 	////////////////
 
+	void TestInit()
+	{}
+
 	void TestPeriodic()
 	{
 		lw->Run();
 	}
+
+	////////////////////
+	///// DISABLED /////
+	////////////////////
+
+	void DisabledInit()
+	{}
+
+	void DisabledPeriodic()
+	{}
 };
 
 START_ROBOT_CLASS(Robot);
