@@ -28,7 +28,8 @@ const double backLeftAngle = 3*PI/4;
 const double frontRightAngle = -PI/4;
 const double backRightAngle = -3*PI/4;
 
-#define InterLink_ID			0
+#define Master_InterLink_ID			0
+#define Slave_InterLink_ID			1
 
 ///// END USER PARAMETERS /////
 
@@ -44,7 +45,9 @@ class Robot: public IterativeRobot
 	Talon *backRight;
 
 	// Input Devices
-	InterLinkElite *InterLink;
+	InterLinkElite *MasterInterLink;
+	InterLinkElite *SlaveInterLink;
+	InterLinkElite *ActiveInterLink;
 
 public:
 
@@ -59,7 +62,8 @@ public:
 		frontRight = new Talon( frontRightChannel );
 		backRight = new Talon( backRightChannel );
 
-		InterLink = new InterLinkElite( InterLink_ID );
+		MasterInterLink = new InterLinkElite( Master_InterLink_ID );
+		SlaveInterLink = new InterLinkElite( Slave_InterLink_ID );
 		ds = DriverStation::GetInstance();
 		lw = LiveWindow::GetInstance();
 	}
@@ -83,10 +87,23 @@ public:
 
 	void TeleopPeriodic()
 	{
-		double ch6 = InterLink->getCh6();
-		double aile = InterLink->getAile();
-		double elev = InterLink->getElev();
-		double rudd = InterLink->getRudd();
+		double throttle;
+
+		bool BuddyBoxEnabled = SmartDashboard::GetBoolean( "Buddy Box Enabled" , false);
+		bool SlaveInControl = MasterInterLink->GetCh5();
+		SmartDashboard::PutBoolean( "Slave In Control", SlaveInControl );
+		bool SlaveControlsSpeed = SmartDashboard::GetBoolean( "Slave Controls Speed", false );
+
+		if( BuddyBoxEnabled && SlaveInControl ) ActiveInterLink = SlaveInterLink;
+		else ActiveInterLink = MasterInterLink;
+
+		if( SlaveInControl && SlaveControlsSpeed ) throttle = SlaveInterLink->getCh6();
+		else throttle = MasterInterLink->getCh6();
+
+		double ch6 = ActiveInterLink->getCh6();
+		double aile = ActiveInterLink->getAile();
+		double elev = ActiveInterLink->getElev();
+		double rudd = ActiveInterLink->getRudd();
 		SmartDashboard::PutNumber( "Rudder", rudd );
 		SmartDashboard::PutNumber( "Throttle", ch6 );
 
