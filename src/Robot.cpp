@@ -49,6 +49,10 @@ class Robot: public IterativeRobot
 	InterLinkElite *SlaveInterLink;
 	InterLinkElite *ActiveInterLink;
 
+	// Driver Station Selections
+	SendableChooser *BuddyBoxEnableChooser;
+	SendableChooser *SlaveSpeedControlChooser;
+
 public:
 
 	////////////////////////////////
@@ -69,6 +73,16 @@ public:
 
 		SmartDashboard::PutBoolean( "Buddy Box Enabled", false );
 		SmartDashboard::PutBoolean( "Slave Controls Speed", false );
+
+		BuddyBoxEnableChooser = new SendableChooser();
+		BuddyBoxEnableChooser->AddDefault( "Disabled", (void*) false );
+		BuddyBoxEnableChooser->AddObject( "Enabled", (void*) true );
+		SmartDashboard::PutData( "Buddy Box Enable", BuddyBoxEnableChooser );
+
+		SlaveSpeedControlChooser = new SendableChooser();
+		SlaveSpeedControlChooser->AddDefault( "Trainer Controls Speed", (void*) false );
+		SlaveSpeedControlChooser->AddObject( "Slave Controls Speed", (void*) true );
+		SmartDashboard::PutData( "SlaveSpeedControlChooser", SlaveSpeedControlChooser );
 	}
 
 	//////////////////////
@@ -92,10 +106,10 @@ public:
 	{
 		double throttle;
 
-		bool BuddyBoxEnabled = SmartDashboard::GetBoolean( "Buddy Box Enabled" );
+		bool BuddyBoxEnabled = BuddyBoxEnableChooser->GetSelected();
 		bool SlaveInControl = MasterInterLink->GetCh5();
-		SmartDashboard::PutBoolean( "Slave In Control", SlaveInControl );
-		bool SlaveControlsSpeed = SmartDashboard::GetBoolean( "Slave Controls Speed" );
+		SmartDashboard::PutBoolean( "Slave In Control", BuddyBoxEnabled ? SlaveInControl : false );
+		bool SlaveControlsSpeed = SlaveSpeedControlChooser->GetSelected();
 
 		if( BuddyBoxEnabled && SlaveInControl ) ActiveInterLink = SlaveInterLink;
 		else ActiveInterLink = MasterInterLink;
@@ -103,7 +117,6 @@ public:
 		if( SlaveInControl && SlaveControlsSpeed ) throttle = SlaveInterLink->getCh6();
 		else throttle = MasterInterLink->getCh6();
 
-		double ch6 = ActiveInterLink->getCh6();
 		double aile = ActiveInterLink->getAile();
 		double elev = ActiveInterLink->getElev();
 		double rudd = ActiveInterLink->getRudd();
