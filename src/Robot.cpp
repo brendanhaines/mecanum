@@ -71,13 +71,10 @@ public:
 		ds = DriverStation::GetInstance();
 		lw = LiveWindow::GetInstance();
 
-		SmartDashboard::PutBoolean( "Buddy Box Enabled", false );
-		SmartDashboard::PutBoolean( "Slave Controls Speed", false );
-
 		BuddyBoxEnableChooser = new SendableChooser();
-		BuddyBoxEnableChooser->AddDefault( "Disabled", (void*) false );
-		BuddyBoxEnableChooser->AddObject( "Enabled", (void*) true );
-		SmartDashboard::PutData( "Buddy Box Enable", BuddyBoxEnableChooser );
+		BuddyBoxEnableChooser->AddDefault( "Buddy Box Disabled", (void*) false );
+		BuddyBoxEnableChooser->AddObject( "Buddy Box Enabled", (void*) true );
+		SmartDashboard::PutData( "BuddyBoxEnableChooser", BuddyBoxEnableChooser );
 
 		SlaveSpeedControlChooser = new SendableChooser();
 		SlaveSpeedControlChooser->AddDefault( "Trainer Controls Speed", (void*) false );
